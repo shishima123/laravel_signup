@@ -4,6 +4,11 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ResetsPasswords;
+use App\PasswordReset;
+use Illuminate\Http\Request;
+use App\User;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class ResetPasswordController extends Controller
 {
@@ -34,6 +39,30 @@ class ResetPasswordController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest');
+        // $this->middleware('guest');
+    }
+
+    public function showResetPasswordForm($token)
+    {
+        $email_reset = PasswordReset::where('token', $token)->first();
+        if ($email_reset->count() > 0) {
+            return view('auth.passwords.reset',compact('email_reset'));
+        }
+        return redirect()->route('password.request')->with(['status' => 'Something wrong']);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $user = User::where('email', $request->email);
+        if ($user->count() > 0) {
+            $user->update([
+                'password' => Hash::make($request->password),
+                'remember_token' => Str::random(60)
+            ]);
+            $email_reset = PasswordReset::where('token', $request->token)->delete();
+
+            return redirect()->route('getLogin')->with(['status' => 'Password has changed!']);
+        }
+        return redirect()->route('password.request')->with(['status' => 'Something wrong']);
     }
 }

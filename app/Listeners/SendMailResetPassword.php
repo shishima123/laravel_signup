@@ -2,12 +2,12 @@
 
 namespace App\Listeners;
 
-use App\Events\ConfirmRegister;
+use App\Events\ResetPassword;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Mail\UserEmail;
+use App\Mail\ResetPasswordEmail;
 
-class SendMailConfirmRegister implements ShouldQueue
+class SendMailResetPassword implements ShouldQueue
 {
     /**
      * Create the event listener.
@@ -22,12 +22,12 @@ class SendMailConfirmRegister implements ShouldQueue
     /**
      * Handle the event.
      *
-     * @param  ConfirmRegister  $event
+     * @param  ResetPassword  $event
      * @return void
      */
-    public function handle(ConfirmRegister $event)
+    public function handle(ResetPassword $event)
     {
-        \Mail::to($event->user['email'])->send(new UserEmail($event->user));
-        return true;
+        // dd($event);
+        \Mail::to($event->password_reset->email)->send(new ResetPasswordEmail($event->password_reset));
     }
 }

@@ -10,7 +10,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class SendMail
+class ConfirmRegister
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -19,6 +19,8 @@ class SendMail
      *
      * @return void
      */
+    public $user;
+
     public function __construct($user)
     {
         $this->user = $user;

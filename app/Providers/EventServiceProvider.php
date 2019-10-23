@@ -15,8 +15,11 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\SendMail' => [
+        'App\Events\ConfirmRegister' => [
             'App\Listeners\SendMailConfirmRegister',
+        ],
+        'App\Events\ResetPassword' => [
+            'App\Listeners\SendMailResetPassword',
         ],
     ];
 

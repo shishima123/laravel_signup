@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
-use App\Events\SendMail;
+use App\Events\ConfirmRegister;
 use App\Mail\UserEmail;
 use Illuminate\Support\Facades\Auth;
 
@@ -70,10 +70,7 @@ class RegisterController extends Controller
         $user->confirmation_code = $confirmation_code;
         $user->confirmed = 0;
         $user->save();
-        event(new SendMail($user));
-        // \Mail::send('emails.sendmail', ['user' => $user, 'confirmation_code' => $confirmation_code ], function($m) use ($user) {
-        //                 $m->to($user->email)->subject('Transaction Details');
-        //             });
+        event(new ConfirmRegister($user));
         Auth::login($user);
         return redirect('/home');
     }
@@ -97,5 +94,11 @@ class RegisterController extends Controller
         }
 
         return redirect()->route('home')->with('status', $notification_status);
+    }
+
+    public function resendEmailVerify()
+    {
+        $user = Auth::user();
+        event(new SendMail($user));
     }
 }

@@ -63,4 +63,17 @@ class LoginController extends Controller
         Auth::logout();
         return redirect()->route('index');
     }
+
+    public function checkVerify()
+    {
+        if (Auth::check()) {
+            if (Auth::user()->confirmed === 0) {
+                return view('auth.verify');
+            } else {
+                return redirect()->route('home');
+            }
+        } else {
+            return redirect()->route('getLogin');
+        }
+    }
 }
