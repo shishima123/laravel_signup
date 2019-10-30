@@ -1,8 +1,1 @@
-aaaa
-bbbb
-cccc
-dddd
-efe
-aaa
-ss
-a
+1
